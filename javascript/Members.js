@@ -82,7 +82,7 @@ class Members {
         let [,classAdd] = this.contentText();
 
         //loads the existing data
-        this.loadData();
+        this.modifyAddAssignees();
 
         //clears the used form (members)
         classAdd.forEach(element => {
@@ -105,9 +105,9 @@ class Members {
         })
     }
     
-    //loads the existing information of the database into the select list of add and delete members
-    loadData(){
-        
+
+    //modifies assignees from the selection box of activities and add and delete members
+    modifyAddAssignees (){
         //calls the database´s table member to get the all the member availables in the databse
         webSocket.send('SELECT * FROM "members"');
 
@@ -115,40 +115,6 @@ class Members {
         webSocket.addEventListener("message", function(event){
             
             let callMembers= JSON.parse(event.data);
-            if (callMembers[0].nameTable.includes("member")) {
-
-                let selectCombo=document.querySelectorAll("select.delete").item(0);
-                
-                //deletes all the nodes children from selectCombo in order to fill up the select list again with the updated version of the database
-                while (selectCombo.childElementCount) {
-                    selectCombo.lastChild.remove(); //removes the last child  
-                }
-
-                //iterates through every element of the database and update the selection list with it
-                callMembers.forEach(element => {
-
-                    //creates tags "option" for the select box
-                    let option =document.createElement("option");
-                    option.id=`${element.id}` 
-                    option.innerHTML=`${element.name} ${element.lastname} ${element.employeeID} `;
-                    option.text= `${element.name} ${element.lastname} ${element.employeeID}`;
-                    selectCombo.appendChild(option);
-
-                });
-            }
-        });
-
-    }
-
-    //modifies assignees from the selection box of activities
-    modifyAddAssignees (){
-        //calls the database´s table member to get the all the member availables in the databse
-        webSocket.send('SELECT * FROM "members"');
-
-        //adds an event listener for when the information reaches the front end
-        webSocket.addEventListener("message", function(event){
-            let callMembers= JSON.parse(event.data);
-
             if (callMembers[0].nameTable.includes("member")){
                  //generates a assignee variable with the assignee select box
                 let assignee = document.querySelectorAll('select.activities').item(0);
@@ -171,6 +137,26 @@ class Members {
                     
                     //appens child to assignee
                     assignee.appendChild(option);
+
+                });
+                
+                //selects list combo in add and delete members form
+                let selectCombo=document.querySelectorAll("select.delete").item(0);
+                
+                //deletes all the nodes children from selectCombo in order to fill up the select list again with the updated version of the database
+                while (selectCombo.childElementCount) {
+                    selectCombo.lastChild.remove(); //removes the last child  
+                }
+
+                //iterates through every element of the database and update the selection list with it
+                callMembers.forEach(element => {
+
+                    //creates tags "option" for the select box
+                    let option =document.createElement("option");
+                    option.id=`${element.id}` 
+                    option.innerHTML=`${element.name} ${element.lastname} ${element.employeeID} `;
+                    option.text= `${element.name} ${element.lastname} ${element.employeeID}`;
+                    selectCombo.appendChild(option);
 
                 });
             }
