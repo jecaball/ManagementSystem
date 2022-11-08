@@ -40,3 +40,7 @@ Usage
 5. for deleting an activity, select it in the selection list and press delete.
 6. Addtional or deletion of activities will appear automatically in the visualization area.
 7. Press back or forward to change months of the visualization overview.
+
+installation
+To deploy the web app the it is required to have installed Node.js and run the file websocket.js in the folder backend.
+Modules required in Node.js are ws for WebSocketServer and pg for postgres
